@@ -1,11 +1,10 @@
-package ru.practicum.shareit.user.service;
+package ru.practicum.shareit.user;
 
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.mapper.UserMapper;
-import ru.practicum.shareit.user.repository.UserMemoryRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +16,7 @@ public class UserService {
             throw new ValidationException("User is null");
         }
 
-        return UserMapper.dtoFromModel(repository.addUser(UserMapper.modelFromDto(userDto)));
+        return UserMapper.toDto(repository.addUser(UserMapper.toEntity(userDto)));
     }
 
     public UserDto updateUser(UserDto userDto) {
@@ -25,7 +24,9 @@ public class UserService {
             throw new ValidationException("User is null");
         }
 
-        return UserMapper.dtoFromModel(repository.updateUser(UserMapper.modelFromDto(userDto)));
+        getById(userDto.getId());
+
+        return UserMapper.toDto(repository.updateUser(UserMapper.toEntity(userDto)));
     }
 
     public UserDto getById(Long userId) {
@@ -33,7 +34,10 @@ public class UserService {
             throw new ValidationException("User id is null");
         }
 
-        return UserMapper.dtoFromModel(repository.getById(userId));
+        return UserMapper.toDto(
+                repository.getById(userId)
+                        .orElseThrow(() -> new NotFoundException("User with id '" + userId + "' not found"))
+        );
     }
 
     public void deleteUser(Long userId) {

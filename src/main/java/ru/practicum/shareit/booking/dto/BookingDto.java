@@ -15,7 +15,7 @@ public class BookingDto {
     private Long id;
     private LocalDate start;
     private LocalDate end;
-    private Long item;
-    private Long booker;
+    private Long itemId;
+    private Long bookerId;
     private BookingStatus status;
 }

@@ -1,8 +1,7 @@
-package ru.practicum.shareit.user.repository;
+package ru.practicum.shareit.user;
 
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.user.exception.DuplicateEmailException;
-import ru.practicum.shareit.user.exception.UserNotFoundException;
+import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.HashMap;
@@ -24,24 +23,25 @@ public class UserMemoryRepository {
 
     public User updateUser(User user) {
         checkUserExists(user);
-        User updatedUser = getById(user.getId());
-        if (!Objects.isNull(user.getName())) {
-            updatedUser.setName(user.getName());
+        Optional<User> updatedUser = getById(user.getId());
+
+        if (updatedUser.isPresent()) {
+            if (!Objects.isNull(user.getName())) {
+                updatedUser.get().setName(user.getName());
+            }
+            if (!Objects.isNull(user.getEmail())) {
+                updatedUser.get().setEmail(user.getEmail());
+            }
+            return updatedUser.get();
         }
-        if (!Objects.isNull(user.getEmail())) {
-            updatedUser.setEmail(user.getEmail());
-        }
-        return updatedUser;
+
+        return null;
     }
 
-    public User getById(Long userId) {
+    public Optional<User> getById(Long userId) {
         User user = data.get(userId);
 
-        if (user == null) {
-            throw new UserNotFoundException("User with id '" + userId + "' not found");
-        }
-
-        return user;
+        return user == null ? Optional.empty() : Optional.of(user);
     }
 
     public void deleteUser(Long userId) {
@@ -54,7 +54,7 @@ public class UserMemoryRepository {
                 .findFirst();
 
         if (searchUser.isPresent()) {
-            throw new DuplicateEmailException("User with email already exists");
+            throw new ConflictException("User with email already exists");
         }
     }
 

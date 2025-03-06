@@ -1,14 +1,13 @@
-package ru.practicum.shareit.item.service;
+package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.exception.ConflictException;
-import ru.practicum.shareit.item.mapper.ItemMapper;
+import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.repository.ItemMemoryRepository;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.user.UserService;
 
 import java.util.List;
 
@@ -21,31 +20,32 @@ public class ItemService {
     public ItemDto addItem(ItemDto itemDto, Long ownerId) {
         UserDto owner = userService.getById(ownerId);
 
-        return ItemMapper.dtoFromModel(itemRepository.addItem(ItemMapper.modelFromDto(itemDto, owner)));
+        return ItemMapper.toDto(itemRepository.addItem(ItemMapper.toEntity(itemDto, owner)));
     }
 
     public ItemDto updateItem(ItemDto itemDto, Long ownerId) {
         UserDto owner = userService.getById(ownerId);
         getItem(itemDto.getId(), ownerId);
 
-        return ItemMapper.dtoFromModel(itemRepository.updateItem(ItemMapper.modelFromDto(itemDto, owner)));
+        return ItemMapper.toDto(itemRepository.updateItem(ItemMapper.toEntity(itemDto, owner)));
     }
 
     public ItemDto getItem(Long itemId, Long ownerId) {
-        Item item = itemRepository.getItemById(itemId);
+        Item item = itemRepository.getItemById(itemId)
+                .orElseThrow(() -> new NotFoundException("Item with id '" + itemId + "' not found"));
 
         if (!item.getOwner().getId().equals(ownerId)) {
             throw new ConflictException("Owner and item owner does not match");
         }
 
-        return ItemMapper.dtoFromModel(item);
+        return ItemMapper.toDto(item);
     }
 
     public List<ItemDto> getAllItem(Long ownerId) {
-        return ItemMapper.dtoFromModel(itemRepository.getAll(ownerId));
+        return ItemMapper.toDto(itemRepository.getAll(ownerId));
     }
 
     public List<ItemDto> getItemByText(String text) {
-        return ItemMapper.dtoFromModel(itemRepository.searchAll(text));
+        return ItemMapper.toDto(itemRepository.searchAll(text));
     }
 }

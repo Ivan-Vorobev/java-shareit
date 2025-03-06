@@ -1,7 +1,6 @@
-package ru.practicum.shareit.item.repository;
+package ru.practicum.shareit.item;
 
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.item.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.*;
@@ -28,14 +27,10 @@ public class ItemMemoryRepository {
         return item;
     }
 
-    public Item getItemById(Long itemId) {
+    public Optional<Item> getItemById(Long itemId) {
         Item item = itemsData.get(itemId);
 
-        if (item == null) {
-            throw new ItemNotFoundException("Item with id '" + itemId + "' not found");
-        }
-
-        return item;
+        return item == null ? Optional.empty() : Optional.of(item);
     }
 
     public List<Item> getAll(Long ownerId) {

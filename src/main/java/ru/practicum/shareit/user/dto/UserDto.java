@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
-import ru.practicum.shareit.user.RequestMethod;
+import ru.practicum.shareit.RequestMethod;
 
 @Data
 @Builder

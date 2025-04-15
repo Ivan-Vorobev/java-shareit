@@ -54,6 +54,6 @@ public class ItemController {
             @Valid @NotNull @RequestHeader("X-Sharer-User-Id") Long ownerId,
             @Valid @NotNull @RequestParam String text
     ) {
-        return itemService.getItemByText(text);
+        return itemService.getItemByText(text, ownerId);
     }
 }

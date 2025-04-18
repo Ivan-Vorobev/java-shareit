@@ -2,7 +2,9 @@ package ru.practicum.shareit.booking;
 
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
@@ -35,20 +37,23 @@ public class BookingMapper {
             return null;
         }
 
-        return BookingDto.builder()
+        BookingDto.BookingDtoBuilder builder = BookingDto.builder()
                 .id(model.getId())
                 .start(model.getStart())
                 .end(model.getEnd())
-                .itemId(model.getItem() != null
-                        ? model.getItem().getId()
-                        : null
-                )
-                .bookerId(model.getBooker() != null
-                        ? model.getBooker().getId()
-                        : null
-                )
-                .status(model.getStatus())
-                .build();
+                .status(model.getStatus());
+
+        if (model.getItem() != null) {
+            builder.itemId(model.getItem().getId());
+            builder.item(ItemMapper.toDto(model.getItem()));
+        }
+
+        if (model.getBooker() != null) {
+            builder.bookerId(model.getBooker().getId());
+            builder.booker(UserMapper.toDto(model.getBooker()));
+        }
+
+        return builder.build();
     }
 
     public static List<BookingDto> toDto(List<Booking> models) {

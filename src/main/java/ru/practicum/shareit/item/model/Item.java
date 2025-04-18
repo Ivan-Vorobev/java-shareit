@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
-/**
- * TODO Sprint add-controllers.
- */
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -39,4 +38,7 @@ public class Item {
     @OneToOne
     @JoinColumn(name = "request_id")
     private ItemRequest request;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Comment> comment;
 }

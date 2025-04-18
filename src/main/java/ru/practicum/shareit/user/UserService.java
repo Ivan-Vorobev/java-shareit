@@ -55,7 +55,7 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    private User findById(Long userId) {
+    public User findById(Long userId) {
         if (userId == null) {
             throw new ValidationException("User id is null");
         }

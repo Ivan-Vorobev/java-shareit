@@ -44,6 +44,7 @@ public class ItemMapper {
                         ? model.getRequest().getId()
                         : null
                 )
+                .comments(CommentMapper.toDto(model.getComment()))
                 .description(model.getDescription())
                 .name(model.getName())
                 .available(model.getAvailable())

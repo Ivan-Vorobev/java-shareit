@@ -8,8 +8,8 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
-    @Query("SELECT i FROM Item i WHERE i.owner.id = :owner_id AND i.available = true AND (i.name ILIKE %:needle% OR i.description ILIKE %:needle%)")
-    List<Item> findAllByText(@Param("needle") String needle, @Param("owner_id") Long ownerId);
+    @Query("SELECT i FROM Item i WHERE i.available = true AND (i.name ILIKE %:needle% OR i.description ILIKE %:needle%)")
+    List<Item> findAllByText(@Param("needle") String needle);
 
-    List<Item> findAllByOwnerIdAndAvailableIsTrue(Long ownerId);
+    List<Item> findAllByOwnerId(Long ownerId);
 }

@@ -3,8 +3,8 @@ services:
     image: postgres:16.1
     container_name: yandex-practicum-postgres
     ports:
-      - "5432:5432"
+      - "9988:5432"
     environment:
       - POSTGRES_DB=shareit
       - POSTGRES_USER=shareit
-      - POSTGRES_PASSWORD=P0z>99}k5Tav
+      - POSTGRES_PASSWORD=shareit

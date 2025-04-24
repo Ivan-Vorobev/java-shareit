@@ -1,11 +1,15 @@
 package ru.practicum.shareit.request;
 
 
+import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
-public class RequestMapper {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ItemRequestMapper {
     public static ItemRequest toEntity(ItemRequestDto dto) {
         if (dto == null) {
             return null;
@@ -14,7 +18,7 @@ public class RequestMapper {
         return ItemRequest.builder()
                 .id(dto.getId())
                 .created(dto.getCreated())
-                .requestorId(dto.getRequestorId() != null
+                .requestor(dto.getRequestorId() != null
                         ? User.builder().id(dto.getRequestorId()).build()
                         : null
                 )
@@ -30,8 +34,19 @@ public class RequestMapper {
         return ItemRequestDto.builder()
                 .id(model.getId())
                 .created(model.getCreated())
-                .requestorId(model.getRequestorId() != null ? model.getRequestorId().getId() : null)
+                .requestorId(model.getRequestor() != null ? model.getRequestor().getId() : null)
                 .description(model.getDescription())
+                .items(ItemMapper.toDto(model.getItems()))
                 .build();
+    }
+
+    public static List<ItemRequestDto> toDto(List<ItemRequest> models) {
+        if (models == null) {
+            return new ArrayList<>();
+        }
+
+        return models.stream()
+                .map(ItemRequestMapper::toDto)
+                .toList();
     }
 }

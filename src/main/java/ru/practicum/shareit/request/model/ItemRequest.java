@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -25,8 +27,11 @@ public class ItemRequest {
     private String description;
 
     @OneToOne
-    @PrimaryKeyJoinColumn(name = "requestor_id")
-    private User requestorId;
+    @JoinColumn(name = "requestor_id")
+    private User requestor;
+
+    @OneToMany(mappedBy = "request")
+    private List<Item> items;
 
     @Column(name = "created_date")
     private LocalDateTime created;

@@ -83,18 +83,19 @@ public class ItemService {
                 .collect(Collectors.toMap(ItemDto::getId, i -> i));
 
         LocalDateTime currentTime = LocalDateTime.now();
-        bookings.stream().peek(bookingDto -> {
+        for (BookingDto bookingDto : bookings) {
             if (bookingDto.getStart().isAfter(currentTime)) {
                 itemsHash.get(bookingDto.getItemId()).setNextBooking(bookingDto);
             }
 
             if (
-                    Objects.isNull(itemsHash.get(bookingDto.getItemId()).getLastBooking())
+                    !Objects.isNull(itemsHash.get(bookingDto.getItemId()))
+                            && Objects.isNull(itemsHash.get(bookingDto.getItemId()).getLastBooking())
                             && bookingDto.getStart().isBefore(currentTime)
             ) {
                 itemsHash.get(bookingDto.getItemId()).setLastBooking(bookingDto);
             }
-        });
+        }
 
         return items;
     }

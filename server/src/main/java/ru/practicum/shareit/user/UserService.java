@@ -1,0 +1,63 @@
+package ru.practicum.shareit.user;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.BadRequestException;
+import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.model.User;
+
+import java.util.Objects;
+
+@Service
+@RequiredArgsConstructor
+public class UserService {
+    private final UserRepository userRepository;
+
+    public UserDto addUser(UserDto userDto) {
+        if (userDto == null) {
+            throw new RuntimeException("User is null");
+        }
+
+        return UserMapper.toDto(userRepository.save(UserMapper.toEntity(userDto)));
+    }
+
+    public UserDto updateUser(UserDto userDto) {
+        if (userDto == null) {
+            throw new BadRequestException("User is null");
+        }
+
+        User user = findById(userDto.getId());
+
+        if (!Objects.isNull(userDto.getName())) {
+            user.setName(userDto.getName());
+        }
+        if (!Objects.isNull(userDto.getEmail())) {
+            user.setEmail(userDto.getEmail());
+        }
+        userRepository.save(user);
+
+        return UserMapper.toDto(user);
+    }
+
+    public UserDto getById(Long userId) {
+        return UserMapper.toDto(findById(userId));
+    }
+
+    public void deleteUser(Long userId) {
+        if (userId == null) {
+            throw new BadRequestException("User id is null");
+        }
+
+        userRepository.deleteById(userId);
+    }
+
+    public User findById(Long userId) {
+        if (userId == null) {
+            throw new BadRequestException("User id is null");
+        }
+
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User with id '" + userId + "' not found"));
+    }
+}

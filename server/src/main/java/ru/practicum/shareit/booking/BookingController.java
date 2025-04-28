@@ -18,8 +18,8 @@ public class BookingController {
     public List<BookingDto> getAllBooking(
             @RequestHeader("X-Sharer-User-Id") Long userId,
             @RequestParam(name = "state") Optional<BookingStatus> state,
-            @RequestParam(name = "from") Integer from,
-            @RequestParam(name = "size") Integer size
+            @RequestParam(name = "from") Optional<Integer> from,
+            @RequestParam(name = "size") Optional<Integer> size
     ) {
         return bookingService.getAllBooking(userId, state);
     }

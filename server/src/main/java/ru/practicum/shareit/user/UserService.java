@@ -28,17 +28,14 @@ public class UserService {
         }
 
         User user = findById(userDto.getId());
-        User updatedUser = UserMapper.toEntity(userDto);
 
-        if (!Objects.isNull(user)) {
-            if (!Objects.isNull(updatedUser.getName())) {
-                user.setName(updatedUser.getName());
-            }
-            if (!Objects.isNull(updatedUser.getEmail())) {
-                user.setEmail(updatedUser.getEmail());
-            }
-            userRepository.save(user);
+        if (!Objects.isNull(userDto.getName())) {
+            user.setName(userDto.getName());
         }
+        if (!Objects.isNull(userDto.getEmail())) {
+            user.setEmail(userDto.getEmail());
+        }
+        userRepository.save(user);
 
         return UserMapper.toDto(user);
     }

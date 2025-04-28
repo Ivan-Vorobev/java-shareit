@@ -95,7 +95,7 @@ public class BookingService {
         return BookingMapper.toDto(bookings);
     }
 
-    private Booking findBooking(Long bookingId) {
+    public Booking findBooking(Long bookingId) {
         return bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Booking with id '" + bookingId + "' not found"));
     }

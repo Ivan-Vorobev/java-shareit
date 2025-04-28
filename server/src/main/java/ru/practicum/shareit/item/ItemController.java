@@ -36,8 +36,7 @@ public class ItemController {
             @RequestHeader("X-Sharer-User-Id") Long ownerId,
             @PathVariable Long itemId
     ) {
-        itemDto.setId(itemId);
-        return itemService.updateItem(itemDto, ownerId);
+        return itemService.updateItem(itemId, itemDto, ownerId);
     }
 
     @GetMapping("/{itemId}")
@@ -49,7 +48,7 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemDto> getItem(
+    public List<ItemDto> searchItem(
             @RequestHeader("X-Sharer-User-Id") Long ownerId,
             @RequestParam String text
     ) {

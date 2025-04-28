@@ -17,8 +17,7 @@ public class ItemRequestController {
             @RequestBody ItemRequestDto itemRequestDto,
             @RequestHeader("X-Sharer-User-Id") Long ownerId
     ) {
-        itemRequestDto.setRequestorId(ownerId);
-        return itemRequestService.add(itemRequestDto);
+        return itemRequestService.add(itemRequestDto, ownerId);
     }
 
     @GetMapping

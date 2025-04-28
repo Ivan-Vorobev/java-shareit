@@ -50,9 +50,9 @@ public class ItemService {
         return CommentMapper.toDto(commentRepository.save(CommentMapper.toEntity(commentDto)));
     }
 
-    public ItemDto updateItem(ItemDto itemDto, Long ownerId) {
+    public ItemDto updateItem(Long itemId, ItemDto itemDto, Long ownerId) {
         UserDto owner = userService.getById(ownerId);
-        Item item = findItem(itemDto.getId());
+        Item item = findItem(itemId);
         Item updatedItem = ItemMapper.toEntity(itemDto, owner);
 
         if (updatedItem.getName() != null) {
@@ -107,7 +107,7 @@ public class ItemService {
         return ItemMapper.toDto(itemRepository.findAllByText(text));
     }
 
-    private Item findItem(Long itemId) {
+    public Item findItem(Long itemId) {
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Item with id '" + itemId + "' not found"));
     }

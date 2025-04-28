@@ -19,10 +19,11 @@ public class ItemRequestService {
     private final ItemRequestRepository itemRequestRepository;
     private final UserService userService;
 
-    public ItemRequestDto add(ItemRequestDto itemRequestDto) {
-        userService.getById(itemRequestDto.getRequestorId());
+    public ItemRequestDto add(ItemRequestDto itemRequestDto, Long ownerId) {
+        userService.getById(ownerId);
 
         itemRequestDto.setId(null);
+        itemRequestDto.setRequestorId(ownerId);
         itemRequestDto.setCreated(LocalDateTime.now());
 
         ItemRequest itemRequest = ItemRequestMapper.toEntity(itemRequestDto);
@@ -43,7 +44,7 @@ public class ItemRequestService {
     public List<ItemRequestDto> findAllUserRequests(Long requestorId) {
         User user = userService.findById(requestorId);
 
-        List<ItemRequest> itemRequests = itemRequestRepository.findAllByRequestorIdNotInOrderByCreatedDesc(List.of(user));
+        List<ItemRequest> itemRequests = itemRequestRepository.findAllByRequestorIdIsNotOrderByCreatedDesc(user.getId());
 
         return ItemRequestMapper.toDto(itemRequests);
     }
